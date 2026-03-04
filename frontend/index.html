@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI SkillSync - Career Intelligence Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <!-- D3.js -->
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.8.5/dist/d3.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 AI SkillSync</h1>
+            <p class="subtitle">Career Intelligence & Learning Management System</p>
+        </header>
+
+        <!-- User Selection -->
+        <section class="card" id="user-section">
+            <h2>Select User & Career</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="userId">User ID:</label>
+                    <select id="userId">
+                        <option value="1">User 1</option>
+                        <option value="2">User 2</option>
+                        <option value="3">User 3</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="careerId">Career Path:</label>
+                    <select id="careerId">
+                        <option value="1">Software Engineer</option>
+                        <option value="2">Data Scientist</option>
+                        <option value="3">Product Manager</option>
+                    </select>
+                </div>
+                <button onclick="loadDashboard()">Load Dashboard</button>
+            </div>
+        </section>
+
+        <!-- Dashboard Overview -->
+        <section class="grid-2" id="dashboard-section" style="display: none;">
+            <!-- Readiness Score -->
+            <div class="card">
+                <h3>📊 Career Readiness</h3>
+                <div class="score-display">
+                    <canvas id="readinessChart"></canvas>
+                    <div class="score-text" id="readinessScore">--%</div>
+                </div>
+                <p id="readinessLabel">Loading...</p>
+            </div>
+
+            <!-- Study Hours -->
+            <div class="card">
+                <h3>📅 Weekly Study Hours</h3>
+                <canvas id="weeklyHoursChart"></canvas>
+            </div>
+
+            <!-- Skill Progress -->
+            <div class="card">
+                <h3>📈 Skill Progress</h3>
+                <canvas id="skillProgressChart"></canvas>
+            </div>
+
+            <!-- Focus Distribution -->
+            <div class="card">
+                <h3>🎯 Focus Score Distribution</h3>
+                <canvas id="focusChart"></canvas>
+            </div>
+        </section>
+
+        <!-- Skill Gap Analysis -->
+        <section class="card" id="skillgap-section" style="display: none;">
+            <h3>🔍 Skill Gap Analysis</h3>
+            <div class="gap-grid">
+                <div class="gap-column">
+                    <h4 class="strong">💪 Strong Skills</h4>
+                    <ul id="strongSkills"></ul>
+                </div>
+                <div class="gap-column">
+                    <h4 class="weak">⚠️ Weak Skills</h4>
+                    <ul id="weakSkills"></ul>
+                </div>
+                <div class="gap-column">
+                    <h4 class="missing">❌ Missing Skills</h4>
+                    <ul id="missingSkills"></ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skill Graph (D3.js) -->
+        <section class="card" id="skillgraph-section" style="display: none;">
+            <h3>🕸️ Skill Graph (D3.js Force-Directed)</h3>
+            <div id="graphContainer"></div>
+        </section>
+
+        <!-- Study Planner -->
+        <section class="card" id="planner-section" style="display: none;">
+            <h3>📋 Adaptive Study Planner</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="examDays">Days Until Exam:</label>
+                    <input type="number" id="examDays" value="30" min="1" max="365">
+                </div>
+                <button onclick="generatePlan()">Generate Plan</button>
+            </div>
+            <div id="planResults"></div>
+        </section>
+
+        <!-- Burnout Risk -->
+        <section class="card" id="burnout-section" style="display: none;">
+            <h3>🧘 Burnout Risk Assessment</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="sleepHours">Sleep Hours (0-24):</label>
+                    <input type="number" id="sleepHours" value="7" min="0" max="24" step="0.5">
+                </div>
+                <div class="form-group">
+                    <label for="studyHours">Study Hours (0-24):</label>
+                    <input type="number" id="studyHours" value="6" min="0" max="24" step="0.5">
+                </div>
+                <div class="form-group">
+                    <label for="focusScore">Focus Score (0-100):</label>
+                    <input type="number" id="focusScore" value="75" min="0" max="100">
+                </div>
+                <button onclick="checkBurnout()">Check Risk</button>
+            </div>
+            <div id="burnoutResult"></div>
+        </section>
+
+        <!-- Digital Twin Simulation -->
+        <section class="card" id="simulation-section" style="display: none;">
+            <h3>🔮 Digital Twin - Score Prediction</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="simStudyHours">Study Hours:</label>
+                    <input type="number" id="simStudyHours" value="20" min="0">
+                </div>
+                <div class="form-group">
+                    <label for="simFocus">Focus Score (0-100):</label>
+                    <input type="number" id="simFocus" value="80" min="0" max="100">
+                </div>
+                <div class="form-group">
+                    <label for="simRevision">Revision Frequency (times/week):</label>
+                    <input type="number" id="simRevision" value="3" min="0">
+                </div>
+                <button onclick="simulateScore()">Predict Score</button>
+            </div>
+            <div id="simulationResult"></div>
+        </section>
+
+        <!-- Navigation Tabs -->
+        <nav class="tabs">
+            <button class="tab active" onclick="showSection('dashboard')">Dashboard</button>
+            <button class="tab" onclick="showSection('skillgap')">Skill Gap</button>
+            <button class="tab" onclick="showSection('skillgraph')">Skill Graph</button>
+            <button class="tab" onclick="showSection('planner')">Planner</button>
+            <button class="tab" onclick="showSection('burnout')">Burnout</button>
+            <button class="tab" onclick="showSection('simulation')">Simulation</button>
+        </nav>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

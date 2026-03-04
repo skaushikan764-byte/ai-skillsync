@@ -39,6 +39,12 @@ In the Render dashboard for your service:
 | `DATABASE_URL` | `sqlite:///./skillsync.db` | SQLite database (default) |
 | | OR for PostgreSQL: | |
 | | `postgresql+psycopg2://user:pass@host/dbname` | Use if you want PostgreSQL |
+
+**Important:** Create a file named `Procfile` (no extension) with:
+```
+web: uvicorn main:app --host 0.0.0.0 --port $PORT
+```
+
 **Note:** No need to set `PYTHON_VERSION` environment variable - Render automatically detects it from `runtime.txt`!
 
 > **Note:** This app works with SQLite (file-based) by default, so you don't need to set up a database server!
